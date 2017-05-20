@@ -68,6 +68,7 @@ Backtest:
 
 .. code-block:: python
 
+    from datetime import datetime
     from metatrader.mt4 import initizalize
     from metatrader.backtest import BackTest
     
