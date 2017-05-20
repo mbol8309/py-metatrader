@@ -3,7 +3,7 @@ py-metatrader
 ****************************************
 
 .. image:: https://badges.gitter.im/Join%20Chat.svg
-   :alt: Join the chat at hhttps://gitter.im/samuraitaiga/py-metatrader
+   :alt: Join the chat at https://gitter.im/samuraitaiga/py-metatrader
    :target: https://gitter.im/samuraitaiga/py-metatrader
 
 py-metatrader 0.0.1
@@ -19,7 +19,7 @@ py-metatrader is a python package that provides interfaces to metatrader4(mt4).
 
 you can automate simuration(backtest in mt4), CI  EA development , etc... by using this library.
 
-currently works with Python 2.7.
+currently works with Python 2.7 and Python 3.x
 
 contributing and porting is welcome.
 
@@ -50,7 +50,7 @@ Install from source:
 
 .. code-block:: bash
 
-    $ git clone https://github.com/samuraitaiga/py-metatrader.git
+    $ git clone https://github.com/viper7882/py-metatrader.git
     $ cd py-metatrader
     $ python setup.py install
 
@@ -61,6 +61,7 @@ ChangeLogs
 * 0.0.1
 
   * first release. backtest and optimization from python.
+  * With multiple bug fixes from a few people as well Python3 compatibility
 
 
 ============
@@ -79,8 +80,8 @@ Backtest:
     initizalize('C:\\Program Files\\FXCM MetaTrader 4')
 
     # specify backtest period by datetime format
-    from_date = datetime(2014, 9, 1)
-    to_date = datetime(2015, 1, 1)
+    from_date = datetime(2016, 9, 1)
+    to_date = datetime(2017, 1, 1)
 
     ea_name = 'Moving Average'
 
@@ -92,11 +93,8 @@ Backtest:
              'MovingPeriod': {'value': 12},
              'MovingShift': {'value': 6}
              }
-    # create backtest object
-    backtest = BackTest(ea_name, param, 'USDJPY', 'M5', from_date, to_date)
-
     # create backtest object with specified spread
-    # backtest = BackTest(ea_name, param, 'USDJPY', 'M5', from_date, to_date, spread=10)
+    backtest = BackTest(ea_name, param, 'USDJPY', 'M5', from_date, to_date, spread=10)
 
     # run backtest
     ret = backtest.run()
@@ -104,6 +102,9 @@ Backtest:
     # you can get result from result object
     # for example you can print gross profit
     print ret.gross_profit
+
+    # and print net profit
+    print ret.profit
 
 .. _metatrader4: http://www.metatrader4.com/
 .. _pip: http://www.pip-installer.org/
