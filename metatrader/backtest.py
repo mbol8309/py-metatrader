@@ -32,7 +32,8 @@ class BackTest(object):
     """
 
     def __init__(self, ea_name, param, symbol, period, from_date, to_date, model=0, spread=5, replace_repot=True):
-        self.ea_name = ea_name
+        self.ea_full_path = ea_name
+        self.ea_path, self.ea_name = os.path.split(ea_name)
         self.param = param
         self.symbol = symbol
         self.period = period
@@ -80,7 +81,7 @@ class BackTest(object):
         shutdown_terminal = True
 
         with open(conf_file, 'w') as fp:
-            fp.write('TestExpert=%s\n' % self.ea_name)
+            fp.write('TestExpert=%s\n' % self.ea_full_path)
             fp.write('TestExpertParameters=%s.set\n' % self.ea_name)
             fp.write('TestSymbol=%s\n' % self.symbol)
             fp.write('TestPeriod=%s\n' % self.period)
