@@ -65,7 +65,7 @@ class MT4(object):
             p = subprocess.Popen(cmd)
             p.wait()
             if p.returncode == 0:
-                logging.info('cmd[%s] successded', cmd)
+                logging.info('cmd[%s] succeeded', cmd)
             else:
                 err_msg = 'run mt4 with cmd[%s] failed!!' % cmd
                 logging.error(err_msg)
