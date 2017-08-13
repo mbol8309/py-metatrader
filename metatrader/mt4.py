@@ -64,10 +64,12 @@ class MT4(object):
             cmd = '%s %s' % (prog, conf)
             p = subprocess.Popen(cmd)
             p.wait()
-            if p.returncode == 0:
-                logging.info('cmd[%s] succeeded', cmd)
+            if ((p.returncode == 0) or (p.returncode == 3)):
+                # Logging info will cause command prompt to wait for enter key which is not required in this case
+                #logging.info('cmd[%s] succeeded', cmd)
+                pass
             else:
-                err_msg = 'run mt4 with cmd[%s] failed!!' % cmd
+                err_msg = 'run mt4 with cmd[%s] failed with %d error code!!' % (cmd, p.returncode)
                 logging.error(err_msg)
                 raise RuntimeError(err_msg)
 

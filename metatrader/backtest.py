@@ -31,7 +31,7 @@ class BackTest(object):
 
     """
 
-    def __init__(self, ea_name, param, symbol, period, from_date, to_date, model=0, spread=5, replace_repot=True):
+    def __init__(self, ea_name, param, symbol, period, from_date, to_date, model=0, spread=5, replace_report=True, read_report=True):
         self.ea_full_path = ea_name
         self.ea_path, self.ea_name = os.path.split(ea_name)
         self.param = param
@@ -41,7 +41,9 @@ class BackTest(object):
         self.to_date = to_date
         self.model = model
         self.spread = spread
-        self.replace_report = replace_repot
+        self.replace_report = replace_report
+        self.read_report = read_report
+        self.optimization = False
 
     def _prepare(self, alias=DEFAULT_MT4_NAME):
         """
@@ -145,9 +147,8 @@ class BackTest(object):
         Notes:
           run backtest
         """
-        from metatrader.report import BacktestReport
-
         self.optimization = False
+        ret = None
 
         self._prepare(alias=alias)
         bt_conf = self._get_conf_abs_path(alias=alias)
@@ -155,21 +156,23 @@ class BackTest(object):
         mt4 = get_mt4(alias=alias)
         mt4.run(self.ea_name, conf=bt_conf)
 
-        ret = BacktestReport(self)
+        if self.read_report == True:
+            ret = BacktestReport(self)
         return ret
 
     def optimize(self, alias=DEFAULT_MT4_NAME):
         """
         """
-        from metatrader.report import OptimizationReport
         self.optimization = True
+        ret = None
         self._prepare(alias=alias)
         bt_conf = self._get_conf_abs_path(alias=alias)
 
         mt4 = get_mt4(alias=alias)
         mt4.run(self.ea_name, conf=bt_conf)
 
-        ret = OptimizationReport(self)
+        if self.read_report == True:
+            ret = OptimizationReport(self)
         return ret
 
 
