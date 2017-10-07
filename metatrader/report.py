@@ -372,7 +372,7 @@ class OptimizationReport():
                     if set.profit > 0:
                         self.profitable_sets += 1
             except KeyError:
-                err_msg = 'optimization report seems invlid format'
+                err_msg = 'optimization report seems invalid format'
                 logging.error(err_msg)
                 raise
         else:

@@ -31,7 +31,7 @@ class BackTest(object):
 
     """
 
-    def __init__(self, ea_name, param, symbol, period, from_date, to_date, model=0, spread=5, replace_report=True, read_report=True):
+    def __init__(self, ea_name, param, symbol, period, from_date, to_date, model=0, spread=5, replace_report=True, read_report=True, portable_mode=True):
         self.ea_full_path = ea_name
         self.ea_path, self.ea_name = os.path.split(ea_name)
         self.param = param
@@ -43,6 +43,7 @@ class BackTest(object):
         self.spread = spread
         self.replace_report = replace_report
         self.read_report = read_report
+        self.portable_mode = portable_mode
         self.optimization = False
 
     def _prepare(self, alias=DEFAULT_MT4_NAME):
@@ -75,7 +76,8 @@ class BackTest(object):
             TestShutdownTerminal=true
         """
 
-        mt4 = get_mt4(alias=alias)
+        mt4 = get_mt4(alias = alias, portable_mode = self.portable_mode)
+        #print ('_create_conf, self.portable_mode: %r, mt4.appdata_path: %s' % (self.portable_mode, mt4.appdata_path))
         conf_file = os.path.join(mt4.appdata_path, 'tester', '%s.conf' % self.ea_name)
 
         # shutdown_terminal must be True.
@@ -104,7 +106,8 @@ class BackTest(object):
         Args:
           ea_name(string): ea name
         """
-        mt4 = get_mt4(alias=alias)
+        mt4 = get_mt4(alias = alias, portable_mode = self.portable_mode)
+        #print ('_create_param, self.portable_mode: %r, mt4.appdata_path: %s' % (self.portable_mode, mt4.appdata_path))
         param_file = os.path.join(mt4.appdata_path, 'tester', '%s.set' % self.ea_name)
 
         with open(param_file, 'w') as fp:
@@ -137,8 +140,9 @@ class BackTest(object):
                         fp.write('%s,2=0\n' % k)
                         fp.write('%s,3=0\n' % k)
 
-    def _get_conf_abs_path(self, alias=DEFAULT_MT4_NAME):
-        mt4 = get_mt4(alias=alias)
+    def _get_conf_abs_path(self, alias=DEFAULT_MT4_NAME, portable_mode = False):
+        mt4 = get_mt4(alias = alias, portable_mode = portable_mode)
+        #print ('_get_conf_abs_path, portable_mode: %r, mt4.appdata_path: %s' % (portable_mode, mt4.appdata_path))
         conf_file = os.path.join(mt4.appdata_path, 'tester', '%s.conf' % self.ea_name)
         return conf_file
 
@@ -151,10 +155,11 @@ class BackTest(object):
         ret = None
 
         self._prepare(alias=alias)
-        bt_conf = self._get_conf_abs_path(alias=alias)
+        bt_conf = self._get_conf_abs_path(alias = alias, portable_mode = self.portable_mode)
 
-        mt4 = get_mt4(alias=alias)
-        mt4.run(self.ea_name, conf=bt_conf)
+        mt4 = get_mt4(alias = alias, portable_mode = self.portable_mode)
+        #print ('run, self.portable_mode: %r, mt4.appdata_path: %s, bt_conf: %s' % (self.portable_mode, mt4.appdata_path, bt_conf))
+        mt4.run(self.ea_name, conf=bt_conf, portable_mode = self.portable_mode)
 
         if self.read_report == True:
             ret = BacktestReport(self)
@@ -166,10 +171,11 @@ class BackTest(object):
         self.optimization = True
         ret = None
         self._prepare(alias=alias)
-        bt_conf = self._get_conf_abs_path(alias=alias)
+        bt_conf = self._get_conf_abs_path(alias = alias, portable_mode = self.portable_mode)
 
-        mt4 = get_mt4(alias=alias)
-        mt4.run(self.ea_name, conf=bt_conf)
+        mt4 = get_mt4(alias = alias, portable_mode = self.portable_mode)
+        #print ('optimize, self.portable_mode: %r, mt4.appdata_path: %s, bt_conf: %s' % (self.portable_mode, mt4.appdata_path, bt_conf))
+        mt4.run(self.ea_name, conf=bt_conf, portable_mode = self.portable_mode)
 
         if self.read_report == True:
             ret = OptimizationReport(self)

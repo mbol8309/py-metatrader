@@ -3,6 +3,7 @@
 @author: samuraitaiga
 """
 import os
+import sys
 import logging
 import subprocess
 
@@ -13,6 +14,7 @@ except:
 import codecs
 
 _mt4s = {}
+_portable_mode = False
 
 DEFAULT_MT4_NAME = 'default'
 # mt4 program file path is written in origin.txt
@@ -31,15 +33,20 @@ class MT4(object):
     appdata_path = None
 
     def __init__(self, prog_path):
-        if os.path.exists(prog_path):
-            self.prog_path = prog_path
-            if is_uac_enabled():
-                self.appdata_path = get_appdata_path(prog_path)
+        self.prog_path_raw = prog_path
+        self.get_appdata_path
+
+    @property
+    def get_appdata_path(self):
+        if os.path.exists(self.prog_path_raw):
+            self.prog_path = self.prog_path_raw
+            if ((is_uac_enabled() == True) and (_portable_mode == False)):
+                self.appdata_path = get_appdata_path(self.prog_path_raw)
             else:
-                self.appdata_path = prog_path
+                self.appdata_path = self.prog_path_raw
 
         else:
-            err_msg = 'prog_path %s not exists' % prog_path
+            err_msg = 'prog_path_raw %s not exists' % self.prog_path_raw
             logging.error(err_msg)
             raise IOError(err_msg)
 
@@ -48,7 +55,7 @@ class MT4(object):
             logging.error(err_msg)
             raise IOError(err_msg)
 
-    def run(self, ea_name, conf=None):
+    def run(self, ea_name, conf=None, portable_mode=False):
         """
         Notes:
           run terminal.exe.
@@ -59,9 +66,13 @@ class MT4(object):
         import subprocess
 
         if conf:
-            prog = '"%s"' % os.path.join(self.prog_path, MT4_EXE)
+            if portable_mode == False:
+                prog = '"%s"' % os.path.join(self.prog_path, MT4_EXE)
+            else:
+                prog = '"%s" /portable' % os.path.join(self.prog_path, MT4_EXE)
             conf = '"%s"' % conf
             cmd = '%s %s' % (prog, conf)
+
             p = subprocess.Popen(cmd)
             p.wait()
             if ((p.returncode == 0) or (p.returncode == 3)):
@@ -158,7 +169,7 @@ def get_appdata_path(program_file_dir):
     return app_dir
 
 
-def initizalize(ntpath, alias=DEFAULT_MT4_NAME):
+def initizalize(ntpath, alias = DEFAULT_MT4_NAME):
     """
     Notes:
       initialize mt4
@@ -169,13 +180,13 @@ def initizalize(ntpath, alias=DEFAULT_MT4_NAME):
     """
     global _mt4s
     if alias not in _mt4s:
-        # store mt4 objecct with alias name
+        # store mt4 object with alias name
         _mt4s[alias] = MT4(ntpath, )
     else:
         logging.info('%s is already initialized' % alias)
 
 
-def get_mt4(alias=DEFAULT_MT4_NAME):
+def get_mt4(alias = DEFAULT_MT4_NAME, portable_mode = False):
     """
     Notes:
       return mt4 object which is initialized.
@@ -185,8 +196,12 @@ def get_mt4(alias=DEFAULT_MT4_NAME):
       mt4 object(metatrader.backtest.MT4): instantiated mt4 object
     """
     global _mt4s
+    global _portable_mode
+    
+    _portable_mode = portable_mode
 
     if alias in _mt4s:
+        _mt4s[alias].get_appdata_path
         return _mt4s[alias]
     else:
         raise RuntimeError('mt4[%s] is not initialized.' % alias)
