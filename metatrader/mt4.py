@@ -42,6 +42,8 @@ class MT4(object):
             self.prog_path = self.prog_path_raw
             if ((is_uac_enabled() == True) and (_portable_mode == False)):
                 self.appdata_path = get_appdata_path(self.prog_path_raw)
+                if self.appdata_path == None:
+                    self.appdata_path = self.prog_path_raw
             else:
                 self.appdata_path = self.prog_path_raw
 
@@ -164,7 +166,7 @@ def get_appdata_path(program_file_dir):
     if app_dir == None:
         err_msg = '%s does not have appdata dir!.' % program_file_dir
         logging.error(err_msg)
-        raise IOError(err_msg)
+        #raise IOError(err_msg)
 
     return app_dir
 
