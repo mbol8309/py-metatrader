@@ -4,8 +4,8 @@ Created on 2015/01/31
 @author: Taiga
 '''
 
-from metatrader.mt4 import get_mt4
-from metatrader.mt4 import DEFAULT_MT4_NAME
+from metatrader.mt5 import get_mt5
+from metatrader.mt5 import DEFAULT_MT5_NAME
 import logging
 import re
 from metatrader.exception import InvalidReportFormat
@@ -86,7 +86,7 @@ class BacktestReport(BaseReport):
     long_positions = None
     long_positions_rate = None
 
-    def __init__(self, backtest, alias=DEFAULT_MT4_NAME):
+    def __init__(self, backtest, alias=DEFAULT_MT5_NAME):
         from bs4 import BeautifulSoup
         import re
         super(BacktestReport, self).__init__(backtest)
@@ -356,7 +356,7 @@ class OptimizationReport():
             results.append(short_report)
         return results
 
-    def __init__(self, backtest, alias=DEFAULT_MT4_NAME):
+    def __init__(self, backtest, alias=DEFAULT_MT5_NAME):
         from metatrader.exception import InvalidReportFormat
 
         report_file = get_report_abs_path(backtest.ea_name, alias=alias)
@@ -379,8 +379,8 @@ class OptimizationReport():
             raise InvalidReportFormat(report_file, r'"Optimization Report" not found in html')
 
 
-def get_report_abs_path(ea_name, alias=DEFAULT_MT4_NAME):
+def get_report_abs_path(ea_name, alias=DEFAULT_MT5_NAME):
     import os
-    mt4 = get_mt4(alias=alias)
-    report = os.path.join(mt4.appdata_path, '%s.htm' % ea_name)
+    mt5 = get_mt5(alias=alias)
+    report = os.path.join(mt5.appdata_path, '%s.htm' % ea_name)
     return report
