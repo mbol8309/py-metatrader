@@ -38,11 +38,14 @@ class BackTest(object):
         2: Open prices only
       optimization(bool): optimization flag. optimization is enabled if True
       replace_report(bool): replace report flag. replace report is enabled if True
+      visual:
+        0: Disabled
+        1: Enabled
 
     """
 
     def __init__(self, ea_name, param, account_login, symbol, period, from_date, to_date, deposit, leverage,
-                    model = 0, replace_report = True, read_report = True, portable_mode = True):
+                    model = 0, replace_report = True, read_report = True, portable_mode = True, visual = 0):
         self.ea_full_path = ea_name
         self.ea_path, self.ea_name = os.path.split(ea_name)
         self.param = param
@@ -58,6 +61,7 @@ class BackTest(object):
         self.read_report = read_report
         self.portable_mode = portable_mode
         self.optimization = False
+        self.visual = visual
 
     def _prepare(self, alias=DEFAULT_MT5_NAME):
         """
@@ -70,6 +74,7 @@ class BackTest(object):
     def _create_conf(self, alias=DEFAULT_MT5_NAME):
         """
         Notes:
+            https://www.metatrader5.com/en/terminal/help/start_advanced/start#configuration_file
             create config file(.ini) which is used parameter of terminal64.exe
             in %APPDATA%\\MetaQuotes\\Terminal\\<UUID>\\Tester for non-portable mode
             in %APPDATA%\\Tester for portable mode
@@ -123,6 +128,8 @@ class BackTest(object):
                 ReplaceReport=1
                 ;--- Set automatic platform shutdown upon completion of testing/optimization
                 ShutdownTerminal=1
+                ;--- Enable (1) or Disable (0) the visual test mode. If the parameter is not specified, the current setting is used.
+                Visual=1
         """
 
         mt5 = get_mt5(alias = alias, portable_mode = self.portable_mode)
@@ -185,6 +192,8 @@ class BackTest(object):
             fp.write('ReplaceReport=%s\n' % str(self.replace_report).lower())
             fp.write(';--- Set automatic platform shutdown upon completion of testing/optimization\n')
             fp.write('ShutdownTerminal=%s\n' % str(shutdown_terminal).lower())
+            fp.write(';;--- Enable (1) or Disable (0) the visual test mode. If the parameter is not specified, the current setting is used.\n')
+            fp.write('Visual=%s\n' % self.visual)
 
     def _create_param(self, alias=DEFAULT_MT5_NAME):
         """
