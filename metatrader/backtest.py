@@ -44,7 +44,7 @@ class BackTest(object):
 
     """
 
-    def __init__(self, ea_name, param, account_login, symbol, period, from_date, to_date, deposit, leverage,
+    def __init__(self, ea_name, param, account_login, symbol, period, from_date, to_date, deposit, deposit_currency, leverage,
                     model = 0, replace_report = True, read_report = True, portable_mode = True, visual = 0):
         self.ea_full_path = ea_name
         self.ea_path, self.ea_name = os.path.split(ea_name)
@@ -55,6 +55,7 @@ class BackTest(object):
         self.from_date = from_date
         self.to_date = to_date
         self.deposit = deposit
+        self.deposit_currency = deposit_currency
         self.leverage = leverage
         self.model = model
         self.replace_report = replace_report
@@ -104,6 +105,8 @@ class BackTest(object):
                 Login=5101264
                 ;--- Initial deposit
                 Deposit=10000
+                ;--- Deposit Currency
+                Currency=USD
                 ;--- Leverage for testing
                 Leverage=1:100
                 ;--- The "All Ticks" mode
@@ -165,6 +168,8 @@ class BackTest(object):
             fp.write('Login=%s\n' % str(self.account_login))
             fp.write(';--- Initial deposit\n')
             fp.write('Deposit=%s\n' % str(self.deposit))
+            fp.write(';--- Deposit Currency\n')
+            fp.write('Currency=%s\n' % str(self.deposit_currency))
             fp.write(';--- Leverage for testing\n')
             fp.write('Leverage=1:%s\n' % str(self.leverage))
             fp.write(';--- 0 = The "All Ticks" mode\n')
