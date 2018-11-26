@@ -33,11 +33,11 @@ class BackTest(object):
       deposit(int): backtest deposit
       leverage(int): 1:leverage ratio
       model(int): backtest model
-        0 — "Every tick"
-        1 — "1 minute OHLC"
-        2 —"Open price only"
-        3 — "Math calculations"
-        4 — "Every tick based on real ticks"
+        0 - Every tick
+        1 - 1 minute OHLC
+        2 - Open price only
+        3 - Math calculations
+        4 - Every tick based on real ticks
       optimization(bool): optimization flag. optimization is enabled if True
       replace_report(bool): replace report flag. replace report is enabled if True
       visual:
@@ -111,8 +111,8 @@ class BackTest(object):
                 Currency=USD
                 ;--- Leverage for testing
                 Leverage=1:100
-                ;--- Tick generation mode (0 — "Every tick", 1 — "1 minute OHLC", 2 — "Open price only", 3 — "Math calculations",
-                ;--- 4 — "Every tick based on real ticks"). If this parameter is not specified, Every Tick mode is used.
+                ;--- Tick generation mode (0 - "Every tick", 1 - "1 minute OHLC", 2 - "Open price only", 3 - "Math calculations",
+                ;--- 4 - "Every tick based on real ticks"). If this parameter is not specified, Every Tick mode is used.
                 Model=4
                 ;--- Execution of trade orders without any delay
                 ExecutionMode=0
