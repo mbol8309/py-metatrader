@@ -33,9 +33,11 @@ class BackTest(object):
       deposit(int): backtest deposit
       leverage(int): 1:leverage ratio
       model(int): backtest model
-        0: Every tick
-        1: Control points
-        2: Open prices only
+        0 — "Every tick"
+        1 — "1 minute OHLC"
+        2 —"Open price only"
+        3 — "Math calculations"
+        4 — "Every tick based on real ticks"
       optimization(bool): optimization flag. optimization is enabled if True
       replace_report(bool): replace report flag. replace report is enabled if True
       visual:
@@ -45,7 +47,7 @@ class BackTest(object):
     """
 
     def __init__(self, ea_name, param, account_login, symbol, period, from_date, to_date, deposit, deposit_currency, leverage,
-                    model = 0, replace_report = True, read_report = True, portable_mode = True, visual = 0):
+                    model = 4, replace_report = True, read_report = True, portable_mode = True, visual = 0):
         self.ea_full_path = ea_name
         self.ea_path, self.ea_name = os.path.split(ea_name)
         self.param = param
@@ -109,8 +111,9 @@ class BackTest(object):
                 Currency=USD
                 ;--- Leverage for testing
                 Leverage=1:100
-                ;--- The "All Ticks" mode
-                Model=1
+                ;--- Tick generation mode (0 — "Every tick", 1 — "1 minute OHLC", 2 — "Open price only", 3 — "Math calculations",
+                ;--- 4 — "Every tick based on real ticks"). If this parameter is not specified, Every Tick mode is used.
+                Model=4
                 ;--- Execution of trade orders without any delay
                 ExecutionMode=0
                 ;--- 0: No optimization
